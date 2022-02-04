@@ -115,7 +115,7 @@ require([
     container: "viewDiv",
     map: map,
     camera: {
-      position: [-75.09519011, 38.32524201, 682.98652],
+      position: [-83.045753, 42.331429, 682.98652],
       heading: 53.86,
       tilt: 48.52,
     },
