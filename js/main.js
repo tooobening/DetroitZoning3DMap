@@ -89,8 +89,8 @@ require([
           type: "fields",
           fieldInfos: [
             {
-              fieldName: "TYPE",
-              label: "Type",
+              fieldName: "BUILD_TYPE",
+              label: "Build Type",
             },
             {
               fieldName: "MEDIAN_HGT",
@@ -105,19 +105,19 @@ require([
 
   const map = new WebScene({
     portalItem: {
-      id: "397c462348464d069a7a63b97644086e",
+      id: "397c462348464d069a7a63b97644086e", //what ?
     },
   });
 
-  map.add(buildingsLayer);
+  //   map.add(buildingsLayer);
 
   const view = new SceneView({
     container: "viewDiv",
     map: map,
     camera: {
-      position: [-83.045753, 42.331429, 682.98652],
+      position: [-73.09519011, 38.32524201, 682.98652], //position: [-83.045753, 42.331429, 682.98652],
       heading: 53.86,
-      tilt: 48.52,
+      tilt: 50,
     },
   });
 
