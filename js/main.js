@@ -100,7 +100,7 @@ require([
         },
       ],
     },
-    outFields: ["BUILD_TYPE", "HEIGHT"],
+    outFields: ["BUILD_TYPE", "MEDIAN_HGT"],
   });
 
   const map = new WebScene({
