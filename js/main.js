@@ -1,129 +1,47 @@
-require([
-  "esri/WebScene",
-  "esri/views/SceneView",
-  "esri/layers/FeatureLayer",
-  "esri/widgets/Legend",
-], (WebScene, SceneView, FeatureLayer, Legend) => {
-  /*****************************************************************
-   * Create a function that generates symbols for extruded polygons.
-   *****************************************************************/
+require(["esri/Map", "esri/views/SceneView", "esri/layers/FeatureLayer"], (
+  Map,
+  SceneView,
+  FeatureLayer
+) => {
+  // Create Map
+  const map = new Map({
+    basemap: "dark-gray-vector",
+    ground: "world-elevation",
+  });
 
-  function getSymbol(color) {
-    return {
-      type: "polygon-3d", // autocasts as new PolygonSymbol3D()
-      symbolLayers: [
-        {
-          type: "extrude", // autocasts as new ExtrudeSymbol3DLayer()
-          material: {
-            color: color,
-          },
-          edges: {
-            type: "solid",
-            color: "#999",
-            size: 0.5,
-          },
-        },
-      ],
-    };
-  }
-
-  /*****************************************************************
-   * Set each unique value directly in the renderer's constructor.
-   * At least one field must be used (in this case the "DESCLU" field).
-   * The label property of each unique value will be used to indicate
-   * the field value and symbol in the legend.
-   *
-   * The size visual variable sets the height of each building as it
-   * exists in the real world according to the "ELEVATION" field.
-   *****************************************************************/
-
-  const renderer = {
-    type: "unique-value", // autocasts as new UniqueValueRenderer()
-    defaultSymbol: getSymbol("#FFFFFF"),
-    defaultLabel: "Other",
-    field: "TYPE",
-    //   uniqueValueInfos: [
-    //     {
-    //       value: "Residential",
-    //       symbol: getSymbol("#A7C636"),
-    //       label: "Residential"
-    //     },
-    //     {
-    //       value: "Commercial",
-    //       symbol: getSymbol("#FC921F"),
-    //       label: "Commercial"
-    //     },
-    //     {
-    //       value: "Hotel/Motel",
-    //       symbol: getSymbol("#ED5151"),
-    //       label: "Hotel/Motel"
-    //     },
-    //     {
-    //       value: "Apartment Rentals",
-    //       symbol: getSymbol("#149ECE"),
-    //       label: "Apartment Rentals"
-    //     }
-    //   ],
-    visualVariables: [
-      {
-        type: "size",
-        field: "HEIGHT",
-        units: "FEET",
-      },
-    ],
-  };
-
-  // Set the renderer on the layer
-  const buildingsLayer = new FeatureLayer({
-    url: "https://services1.arcgis.com/xUx8EjNc6egUPYWh/arcgis/rest/services/Building_Footprints/FeatureServer",
-    renderer: renderer,
-    elevationInfo: {
-      mode: "on-the-ground",
+  // Create the SceneView
+  const view = new SceneView({
+    container: "viewDiv",
+    map: map,
+    camera: {
+      position: [-83.045753, 42.331429, 707],
+      tilt: 81,
+      heading: 50,
     },
-    title: "Extruded building footprints",
+  });
+
+  const layer = new FeatureLayer({
+    url: "https://uw-mad.maps.arcgis.com/home/item.html?id=201984878b3b456a924f2a5ea391af02",
     popupTemplate: {
       // autocasts as new PopupTemplate()
-      title: "{BUILD_TYPE}",
+      title: "{ZONING_REV}",
       content: [
         {
           type: "fields",
           fieldInfos: [
             {
-              fieldName: "BUILD_TYPE",
-              label: "Build Type",
+              fieldName: "ZONING_REV",
+              label: "Zoning",
             },
             {
-              fieldName: "MEDIAN_HGT",
-              label: "Height",
+              fieldName: "ZDESCR_N",
+              label: "Description",
             },
           ],
         },
       ],
     },
-    outFields: ["BUILD_TYPE", "MEDIAN_HGT"],
   });
 
-  const map = new WebScene({
-    portalItem: {
-      id: "397c462348464d069a7a63b97644086e", //what ?
-    },
-  });
-
-  //   map.add(buildingsLayer);
-
-  const view = new SceneView({
-    container: "viewDiv",
-    map: map,
-    camera: {
-      position: [-73.09519011, 38.32524201, 682.98652], //position: [-83.045753, 42.331429, 682.98652],
-      heading: 53.86,
-      tilt: 50,
-    },
-  });
-
-  const legend = new Legend({
-    view: view,
-  });
-
-  view.ui.add(legend, "bottom-right");
+  map.add(layer);
 });
