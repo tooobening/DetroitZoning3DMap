@@ -20,8 +20,8 @@ require(["esri/Map", "esri/views/SceneView", "esri/layers/FeatureLayer"], (
     },
   });
 
-  const layer = new FeatureLayer({
-    url: "https://uw-mad.maps.arcgis.com/home/item.html?id=201984878b3b456a924f2a5ea391af02",
+  const layerZoning = new FeatureLayer({
+    url: "https://services2.arcgis.com/HsXtOCMp1Nis1Ogr/arcgis/rest/services/Detroit_Zoning/FeatureServer",
     popupTemplate: {
       // autocasts as new PopupTemplate()
       title: "{ZONING_REV}",
@@ -34,14 +34,80 @@ require(["esri/Map", "esri/views/SceneView", "esri/layers/FeatureLayer"], (
               label: "Zoning",
             },
             {
-              fieldName: "ZDESCR_N",
+              fieldName: "ZDESCR",
               label: "Description",
             },
           ],
         },
       ],
     },
+    outFields: ["ZONING_REV", "ZDESCR"],
   });
 
-  map.add(layer);
+  const renderer = {
+    type: "unique-value", // autocasts as new UniqueValueRenderer()
+    defaultSymbol: getSymbol("#0080FF80"),
+    defaultLabel: "Other",
+    visualVariables: [
+      {
+        type: "size",
+        field: "median_hgt",
+      },
+    ],
+  };
+
+  const layerFootprint = new FeatureLayer({
+    url: "https://services1.arcgis.com/xUx8EjNc6egUPYWh/arcgis/rest/services/Building_Footprints/FeatureServer",
+    renderer: renderer,
+    elevationInfo: {
+      mode: "on-the-ground",
+    },
+    title: "Extruded building footprints",
+    popupTemplate: {
+      // autocasts as new PopupTemplate()
+      title: "Building {building_id}",
+      content: [
+        {
+          type: "fields",
+          fieldInfos: [
+            {
+              fieldName: "median_hgt",
+              label: "Height (ft)",
+            },
+            {
+              fieldName: "source",
+              label: "Source",
+            },
+          ],
+        },
+      ],
+      outFields: ["median_hgt", "source"],
+    },
+  });
+
+  map.add(layerZoning);
+  map.add(layerFootprint);
+
+  /*****************************************************************
+   /*  * Create a function that generates symbols for extruded polygons.
+   /* *****************************************************************/
+
+  function getSymbol(color) {
+    return {
+      type: "polygon-3d", // autocasts as new PolygonSymbol3D()
+      symbolLayers: [
+        {
+          type: "extrude", // autocasts as new ExtrudeSymbol3DLayer()
+          material: {
+            color: color,
+          },
+          //   edges: {
+          //     type: "none",
+          //     color: "#999",
+          //     size: 0.5,
+          //   },
+        },
+      ],
+    };
+  }
 });
