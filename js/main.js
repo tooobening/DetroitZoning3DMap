@@ -3,27 +3,39 @@ require([
   "esri/views/SceneView",
   "esri/layers/FeatureLayer",
   "esri/widgets/Legend",
-], (Map, SceneView, FeatureLayer, Legend) => {
+  "esri/widgets/Home",
+], (Map, SceneView, FeatureLayer, Legend, Home) => {
   // Create Map
   const map = new Map({
     basemap: "dark-gray-vector",
     ground: "world-elevation",
   });
-
   // Create the SceneView
   const view = new SceneView({
     container: "viewDiv",
     map: map,
     camera: {
-      position: [-83.045753, 42.331429, 707],
-      tilt: 81,
-      heading: 50,
+      position: [-83.045753, 42.308429, 2000],
+      tilt: 60,
+      heading: 20,
     },
   });
 
+  const renderers = {
+    type: "unique-value", // autocasts as new UniqueValueRenderer()
+    defaultSymbol: getSymbol("#0080FF80"),
+    defaultLabel: "Other",
+    visualVariables: [
+      {
+        type: "size",
+        field: "median_hgt",
+      },
+    ],
+  };
+
   const layerZoning = new FeatureLayer({
     url: "https://services2.arcgis.com/HsXtOCMp1Nis1Ogr/arcgis/rest/services/Detroit_Zoning/FeatureServer",
-    title: "Zoning ",
+    title: "Zoning",
     popupTemplate: {
       // autocasts as new PopupTemplate()
       title: "{ZONING_REV}",
@@ -46,21 +58,9 @@ require([
     outFields: ["ZONING_REV", "ZDESCR"],
   });
 
-  const renderer = {
-    type: "unique-value", // autocasts as new UniqueValueRenderer()
-    defaultSymbol: getSymbol("#0080FF80"),
-    defaultLabel: "Other",
-    visualVariables: [
-      {
-        type: "size",
-        field: "median_hgt",
-      },
-    ],
-  };
-
   const layerFootprint = new FeatureLayer({
     url: "https://services1.arcgis.com/xUx8EjNc6egUPYWh/arcgis/rest/services/Building_Footprints/FeatureServer",
-    renderer: renderer,
+    renderer: renderers,
     elevationInfo: {
       mode: "on-the-ground",
     },
@@ -87,12 +87,12 @@ require([
     },
   });
 
-  map.add(layerZoning);
   map.add(layerFootprint);
+  map.add(layerZoning);
 
   /*****************************************************************
-   /*  * Create a function that generates symbols for extruded polygons.
-   /* *****************************************************************/
+     /*  * Create a function that generates symbols for extruded polygons.
+     /* *****************************************************************/
 
   function getSymbol(color) {
     return {
@@ -112,10 +112,12 @@ require([
       ],
     };
   }
-
   const legend = new Legend({
     view: view,
   });
-
+  const homeWidget = new Home({
+    view: view,
+  });
   view.ui.add(legend, "bottom-right");
+  view.ui.add(homeWidget, "top-left");
 });

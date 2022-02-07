@@ -1,9 +1,9 @@
-require([
-  "esri/views/MapView",
-  "esri/views/SceneView",
-  "esri/WebMap",
-  "esri/WebScene",
-], (MapView, SceneView, WebMap, WebScene) => {
+require(["esri/Map", "esri/views/SceneView", "esri/WebMap", "esri/WebScene"], (
+  Map,
+  SceneView,
+  WebMap,
+  WebScene
+) => {
   const switchButton = document.getElementById("switch-btn");
 
   const appConfig = {
