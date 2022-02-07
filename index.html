@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width">
-            <title></title>
+            <title>Detroit Zoning with 3D footprints</title>
 
         <!--put your external stylesheet links here-->
         <link rel="stylesheet" href="css/style.css">
@@ -39,10 +39,14 @@
     <body>
         <!--put your initial page content here-->
         <div id="viewDiv"></div>
+        <div id="infoDiv">
+          <input class="esri-component esri-widget--button esri-widget esri-interactive" type="button" id="switch-btn" value="3D"/>
+        </div>
         <!--you can also use this space for internal scripts;
         place these within <script> tags-->
 
         <!--put your external script links here-->
-        <script type="text/javascript" src="js/main.js"></script>
+        <!-- <script type="text/javascript" src="js/main.js"></script> -->
+        <script type="text/javascript" src="switchView.js"></script>
     </body>
 </html>

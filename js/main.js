@@ -1,8 +1,9 @@
-require(["esri/Map", "esri/views/SceneView", "esri/layers/FeatureLayer"], (
-  Map,
-  SceneView,
-  FeatureLayer
-) => {
+require([
+  "esri/Map",
+  "esri/views/SceneView",
+  "esri/layers/FeatureLayer",
+  "esri/widgets/Legend",
+], (Map, SceneView, FeatureLayer, Legend) => {
   // Create Map
   const map = new Map({
     basemap: "dark-gray-vector",
@@ -22,6 +23,7 @@ require(["esri/Map", "esri/views/SceneView", "esri/layers/FeatureLayer"], (
 
   const layerZoning = new FeatureLayer({
     url: "https://services2.arcgis.com/HsXtOCMp1Nis1Ogr/arcgis/rest/services/Detroit_Zoning/FeatureServer",
+    title: "Zoning ",
     popupTemplate: {
       // autocasts as new PopupTemplate()
       title: "{ZONING_REV}",
@@ -62,7 +64,7 @@ require(["esri/Map", "esri/views/SceneView", "esri/layers/FeatureLayer"], (
     elevationInfo: {
       mode: "on-the-ground",
     },
-    title: "Extruded building footprints",
+    title: "Extruded building footprints", //show on legend
     popupTemplate: {
       // autocasts as new PopupTemplate()
       title: "Building {building_id}",
@@ -110,4 +112,10 @@ require(["esri/Map", "esri/views/SceneView", "esri/layers/FeatureLayer"], (
       ],
     };
   }
+
+  const legend = new Legend({
+    view: view,
+  });
+
+  view.ui.add(legend, "bottom-right");
 });
