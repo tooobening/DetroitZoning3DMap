@@ -4,7 +4,8 @@ require([
   "esri/layers/FeatureLayer",
   "esri/widgets/Legend",
   "esri/widgets/Home",
-], (Map, SceneView, FeatureLayer, Legend, Home) => {
+  "esri/widgets/Search",
+], (Map, SceneView, FeatureLayer, Legend, Home, Search) => {
   // Create Map
   const map = new Map({
     basemap: "dark-gray-vector",
@@ -118,6 +119,12 @@ require([
   const homeWidget = new Home({
     view: view,
   });
+  const searchWidget = new Search({
+    view: view,
+  });
+
+  // Add the search widget to the top right corner of the view
+  view.ui.add(searchWidget, { position: "top-right" });
   view.ui.add(legend, "bottom-right");
   view.ui.add(homeWidget, "top-left");
 });
