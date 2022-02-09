@@ -103,7 +103,6 @@ require([
   appConfig.mapView = createView(initialViewParams, "2d");
   appConfig.mapView.map = map2d;
   appConfig.activeView = appConfig.mapView;
-  addWidgets(appConfig.activeView);
 
   // create 3D view, won't initialize until container is set
   initialViewParams.container = null;
@@ -144,40 +143,53 @@ require([
     const activeViewpoint = appConfig.activeView.viewpoint.clone();
     // remove the reference to the container for the previous view
     appConfig.activeView.container = null;
+    legend.view = null;
+    homeWidget.view = null;
+    searchWidget.view = null;
     if (is3D) {
+      //now is Scene, will switch to map
       // if the input view is a SceneView, set the viewpoint on the
       // mapView instance. Set the container on the mapView and flag
       // it as the active view
       appConfig.mapView.viewpoint = activeViewpoint;
       appConfig.mapView.container = appConfig.container;
       appConfig.activeView = appConfig.mapView;
-      addWidgets(appConfig.activeView);
-      }
-      
       switchButton.value = "3D";
+      console.log("3d here");
+      updateWidgets();
     } else {
+      // now is map , will switch to scene
       appConfig.sceneView.viewpoint = activeViewpoint;
       appConfig.sceneView.container = appConfig.container;
       appConfig.activeView = appConfig.sceneView;
-      addWidgets(appConfig.activeView);
       switchButton.value = "2D";
+      console.log("2d here");
+      updateWidgets();
     }
   }
-  function addWidgets(activeView) {
-    const legend = new Legend({
-      view: activeView,
-    });
-    const homeWidget = new Home({
-      view: activeView,
-    });
-    const searchWidget = new Search({
-      view: activeView,
-    });
 
-    activeView.ui.add(legend, "bottom-right");
-    activeView.ui.add(searchWidget, "top-right");
-    activeView.ui.add(homeWidget, "top-left");
+  const legend = new Legend({
+    view: appConfig.activeView,
+  });
+  const homeWidget = new Home({
+    view: appConfig.activeView,
+  });
+  const searchWidget = new Search({
+    view: appConfig.activeView,
+  });
+  appConfig.activeView.ui.add(legend, "bottom-right");
+  appConfig.activeView.ui.add(searchWidget, "top-right");
+  appConfig.activeView.ui.add(homeWidget, "top-left");
+
+  function updateWidgets() {
+    legend.view = appConfig.activeView;
+    homeWidget.view = appConfig.activeView;
+    searchWidget.view = appConfig.activeView;
+    appConfig.activeView.ui.add(legend, "bottom-right");
+    appConfig.activeView.ui.add(searchWidget, "top-right");
+    appConfig.activeView.ui.add(homeWidget, "top-left");
   }
+
   function getLayerFootprint(type) {
     let layerFootprint;
     if (type == "2d") {
