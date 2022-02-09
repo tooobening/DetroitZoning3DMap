@@ -143,6 +143,7 @@ require([
     const activeViewpoint = appConfig.activeView.viewpoint.clone();
     // remove the reference to the container for the previous view
     appConfig.activeView.container = null;
+    //reomve view setting of the widgets
     legend.view = null;
     homeWidget.view = null;
     searchWidget.view = null;
