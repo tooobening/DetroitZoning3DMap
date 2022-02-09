@@ -152,6 +152,8 @@ require([
       appConfig.mapView.container = appConfig.container;
       appConfig.activeView = appConfig.mapView;
       addWidgets(appConfig.activeView);
+      }
+      
       switchButton.value = "3D";
     } else {
       appConfig.sceneView.viewpoint = activeViewpoint;
